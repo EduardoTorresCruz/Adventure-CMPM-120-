@@ -66,17 +66,17 @@ class Demo2 extends AdventureScene {
         super("demo2", "The second room has a long name (it truly does).");
     }
     onEnter() {
-        this.add.text(this.w * 0.3, this.w * 0.4, "just go back")
+        this.add.text(this.w * 0.3, this.w * 0.4, "return")
             .setFontSize(this.s * 2)
             .setInteractive()
             .on('pointerover', () => {
-                this.showMessage("You've got no other choice, really.");
+                this.showMessage("Are you really going to turn back?");
             })
             .on('pointerdown', () => {
                 this.gotoScene('demo1');
             });
 
-        let finish = this.add.text(this.w * 0.6, this.w * 0.2, '(finish the game)')
+        let finish = this.add.text(this.w * 0.6, this.w * 0.2, 'Head to the REAL game', {fontStyle: 'italic'})
             .setInteractive()
             .on('pointerover', () => {
                 this.showMessage('*giggles*');
