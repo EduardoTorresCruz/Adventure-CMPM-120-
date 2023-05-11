@@ -88,7 +88,7 @@ class Demo2 extends AdventureScene {
                     duration: 500
                 });
             })
-            .on('pointerdown', () => this.gotoScene('outro'));
+            .on('pointerdown', () => this.gotoScene('real_intro'));
     }
 }
 
@@ -106,14 +106,49 @@ class Intro extends Phaser.Scene {
     }
 }
 
-class Outro extends Phaser.Scene {
+class Real_Intro extends Phaser.Scene {
     constructor() {
-        super('outro');
+        super('real_intro');
     }
+    
+    preload(){
+        this.load.path = './assets/';
+        this.load.image('studio_logo', 'LuciousLightLogo.png');
+    }
+    
     create() {
-        this.add.text(50, 50, "That's all!").setFontSize(50);
-        this.add.text(50, 100, "Click anywhere to restart.").setFontSize(20);
-        this.input.on('pointerdown', () => this.scene.start('intro'));
+        this.graphics = this.add.graphics();
+
+        // adds studio logo at the center of screen
+        let studio_logo = this.add.image(1000, 550, 'studio_logo');
+        studio_logo.depth = 0;
+
+        // add transition(first creating white rectangle)
+        this.graphics.fillStyle(0xFFFFFF, 1); // color, opacity
+        let white_rect = this.graphics.fillRect(0, 0, this.game.config.width, this.game.config.height);
+
+        studio_logo.alpha = 0; 
+        white_rect.alpha = 0;
+        white_rect.depth = 10; // ensures rectangle is on top of everything
+
+        // have the screen fade in for 4 sceonds
+        this.tweens.add({
+            targets: studio_logo,
+            alpha: 1,
+            duration: 4000,
+            ease: 'Linear',
+            repeat: 0,
+        });
+
+        // have the screen fade out to white(1 second after all animations)
+        this.tweens.add({
+        targets: white_rect,
+            delay: 7000,
+            alpha: 1,
+            duration: 1000,
+            ease: 'Linear',
+            repeat: 0,
+        });
     }
 }
 
@@ -125,7 +160,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Intro, Demo1, Demo2, Outro],
+    scene: [Real_Intro, Intro, Demo1, Demo2],
     title: "Adventure Game",
 });
 
