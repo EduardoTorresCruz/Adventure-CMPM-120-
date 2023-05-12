@@ -165,9 +165,12 @@ class Bedroom extends AdventureScene {
     preload(){
         this.load.path = './assets/';
         this.load.image('studio_logo', 'LuciousLightLogo.png');
+        this.load.image('bedroom_img', 'bedroom.png')
     }
 
     onEnter() {
+        let bg = this.add.image(0, 0, 'bedroom_img').setOrigin(0, 0);
+        bg.setScale(0.36);
 
         let wallet = this.add.image(this.w * 0.3, this.w * 0.3, 'studio_logo')
             .setFontSize(this.s * 2)
@@ -184,7 +187,6 @@ class Bedroom extends AdventureScene {
                     duration: 100
                 });
             });
-
     }
 }
 
