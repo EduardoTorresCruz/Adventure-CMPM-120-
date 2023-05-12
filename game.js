@@ -149,6 +149,42 @@ class Real_Intro extends Phaser.Scene {
             ease: 'Linear',
             repeat: 0,
         });
+
+        // go to start of game after all that needs to occur in the intro
+        this.time.delayedCall(8000, () => {
+            this.scene.start('bedroom');
+        })
+    }
+}
+
+class Bedroom extends AdventureScene {
+    constructor() {
+        super("bedroom", "Your room");
+    }
+
+    preload(){
+        this.load.path = './assets/';
+        this.load.image('studio_logo', 'LuciousLightLogo.png');
+    }
+
+    onEnter() {
+
+        let wallet = this.add.image(this.w * 0.3, this.w * 0.3, 'studio_logo')
+            .setFontSize(this.s * 2)
+            .setInteractive()
+            .on('pointerover', () => this.showMessage("Worn out black leather, yet reliable"))
+            .on('pointerdown', () => {
+                this.showMessage("Can't leave without this");
+                this.tweens.add({
+                    targets: wallet,
+                    x: '+=' + this.s,
+                    repeat: 2,
+                    yoyo: true,
+                    ease: 'Sine.inOut',
+                    duration: 100
+                });
+            });
+
     }
 }
 
@@ -160,7 +196,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Real_Intro, Intro, Demo1, Demo2],
+    scene: [Bedroom, Real_Intro, Intro, Demo1, Demo2,],
     title: "Adventure Game",
 });
 

@@ -1,3 +1,5 @@
+// Adventure game engine which can be extended from to use abstracted methods for common methods like collecting items, using items, etc
+
 class AdventureScene extends Phaser.Scene {
 
     init(data) {
@@ -147,4 +149,40 @@ class AdventureScene extends Phaser.Scene {
     onEnter() {
         console.warn('This AdventureScene did not implement onEnter():', this.constructor.name);
     }
+
+    // added code by Eduardo Torres Cruz
+
+    /*
+    // makes an draggable object(image)
+    makeDraggableObj(obj, imagePath) {
+        let obj = this.add.image(0, 0, imagePath);
+
+        obj.setInteractive({useHandCursor: true}).on('pointerdown')
+        
+        this.input.on('pointerdown', this.startDrag, this);
+
+        // start the dragging of target based on pointer
+        startDrag(pointer, targets){
+            this.input.off('pointerdown', this.startDrag, this);
+            this.dragObj = targets[0];
+            this.input.on('pointermove', this.doDrag, this);
+            this.input.on('pointerup', this.stopDrag, this);
+        }
+
+        // dragging movement
+        doDrag(pointer){
+            this.dragObj.x = pointer.x;
+            this.dragObj.y = pointer.y;
+    
+        }
+
+        // stop the dragging of target
+        stopDrag(){
+            this.input.on('pointerdown', this.startDrag,this);
+            this.input.off('pointermove', this.doDrag, this);
+            this.input.of('pointerup', this.stopDrag, this);
+        
+        }
+    }
+    */
 }
