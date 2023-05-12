@@ -106,6 +106,8 @@ class Intro extends Phaser.Scene {
     }
 }
 
+// added code by Eduardo Torres Cruz
+
 class Real_Intro extends Phaser.Scene {
     constructor() {
         super('real_intro');
@@ -140,6 +142,27 @@ class Real_Intro extends Phaser.Scene {
             repeat: 0,
         });
 
+        // delay this event by 4 seconds
+        this.time.addEvent({
+            delay: 4000,
+            callback: ()=>{
+                // create star 
+                let star = this.add.star(775, 400, 5, 10, 20, 0xFFFFFF);
+            
+                // have the star pop in
+                this.tweens.add({
+                targets: star,
+                scaleX: 3,
+                scaleY: 3,
+                angle: 300,
+                duration: 2000,
+                ease: 'Bounce',
+                repeat: 0,
+                });
+            },
+            loop: false,
+        });
+
         // have the screen fade out to white(1 second after all animations)
         this.tweens.add({
         targets: white_rect,
@@ -159,7 +182,7 @@ class Real_Intro extends Phaser.Scene {
 
 class Bedroom extends AdventureScene {
     constructor() {
-        super("bedroom", "Your room");
+        super("bedroom", "Your room(4:30 a.m)");
     }
 
     preload(){
@@ -169,24 +192,113 @@ class Bedroom extends AdventureScene {
     }
 
     onEnter() {
+        this.graphics = this.add.graphics();
+        
+        // Creates background of gameplay scene/interactive area
         let bg = this.add.image(0, 0, 'bedroom_img').setOrigin(0, 0);
         bg.setScale(0.36);
 
-        let wallet = this.add.image(this.w * 0.3, this.w * 0.3, 'studio_logo')
-            .setFontSize(this.s * 2)
-            .setInteractive()
+        let wallet = this.add.text(457, 527, 'hhhhhh', {color: ('#000000')})
+            .setInteractive({useHandCursor: true})
+            
+            // Very important as text is naturally works with pointer vs rectangle(fillRect) therefore sneakily make text a rect by having same color background + text
+            .setBackgroundColor('#000000') 
+            
             .on('pointerover', () => this.showMessage("Worn out black leather, yet reliable"))
             .on('pointerdown', () => {
-                this.showMessage("Can't leave without this");
+                this.showMessage("Oh, I'll take my Student ID");
+                this.gainItem('wallet');
                 this.tweens.add({
                     targets: wallet,
-                    x: '+=' + this.s,
-                    repeat: 2,
-                    yoyo: true,
-                    ease: 'Sine.inOut',
-                    duration: 100
+                    y: `-=${2 * this.s}`,
+                    alpha: { from: 1, to: 0 },
+                    duration: 500,
+                    onComplete: () => wallet.destroy()
                 });
             });
+        wallet.depth = 10;
+        this.highlightOnHover(wallet);
+
+        let computer = this.add.text(1100, 1000, 'hhhhhh', {color: ('#3E3E3E')})
+            .setInteractive({useHandCursor: true})
+            
+            // Very important as text is naturally works with pointer vs rectangle(fillRect) therefore sneakily make text a rect by having same color background + text
+            .setBackgroundColor('#3E3E3E') 
+            
+            .on('pointerover', () => this.showMessage("A smooth Macbook with some stickers on the back"))
+            .on('pointerdown', () => {
+                this.showMessage("Maybe this will come in handy");
+                this.gainItem('computer');
+                this.tweens.add({
+                    targets: computer,
+                    y: `-=${2 * this.s}`,
+                    alpha: { from: 1, to: 0 },
+                    duration: 500,
+                    onComplete: () => computer.destroy()
+                });
+            });
+        computer.depth = 10;
+        this.highlightOnHover(computer);
+
+        let apron = this.add.text(457, 400, 'hhhhhh', {color: ('#26A50F')})
+            .setInteractive({useHandCursor: true})
+            
+            // Very important as text is naturally works with pointer vs rectangle(fillRect) therefore sneakily make text a rect by having same color background + text
+            .setBackgroundColor('#26A50F') 
+            
+            .on('pointerover', () => this.showMessage("A clean apron with the iconic Starbucks siren"))
+            .on('pointerdown', () => {
+                this.showMessage("Can't leave without this");
+                this.gainItem('apron');
+                this.tweens.add({
+                    targets: apron,
+                    y: `-=${2 * this.s}`,
+                    alpha: { from: 1, to: 0 },
+                    duration: 500,
+                    onComplete: () => apron.destroy()
+                });
+                next_text.alpha = 1;
+            });
+        apron.depth = 10;
+        this.highlightOnHover(apron);
+
+        let next_text = this.add.text(this.w / 3, this.h / 2, 'Leave for work', {color: ('#FFFFFF')})
+            .setInteractive({useHandCursor: true})
+            .setFontSize(25)
+            .setBackgroundColor('0x000000')
+            .on('pointerover', () => 
+                this.showMessage("Ready?"))
+            .on('pointerdown', () =>
+                this.gotoScene('starbucks'));
+        next_text.alpha = 0;
+    }
+}
+
+class Work extends AdventureScene {
+    constructor() {
+        super("starbucks", "Your work(5:30 a.m)");
+    }
+
+    preload(){
+        this.load.path = './assets/';
+        this.load.image('work_img', 'starbucks.png')
+    }
+
+    onEnter() {
+        this.graphics = this.add.graphics();
+        
+        // Creates background of gameplay scene/interactive area
+        let bg = this.add.image(0, 0, 'work_img').setOrigin(0, 0);
+        bg.setScale(0.53);
+
+        let next_text = this.add.text(this.w / 3, this.h / 2, 'Get to work', {color: ('#FFFFFF')})
+            .setInteractive({useHandCursor: true})
+            .setFontSize(25)
+            .setBackgroundColor('0x000000')
+            .on('pointerdown', () => {
+                next_text.alpha = 0;
+            });
+        this.highlightOnHover(next_text);
     }
 }
 
@@ -198,7 +310,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Bedroom, Real_Intro, Intro, Demo1, Demo2,],
+    scene: [Bedroom, Work, Real_Intro, Intro, Demo1, Demo2,],
     title: "Adventure Game",
 });
 

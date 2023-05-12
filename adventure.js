@@ -185,4 +185,10 @@ class AdventureScene extends Phaser.Scene {
         }
     }
     */
+    highlightOnHover(obj){
+        obj.on('pointerover', () => 
+            obj.setTintFill(0xFFFDDD))
+        obj.on('pointerout', () => 
+            obj.clearTint())
+    }
 }
