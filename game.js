@@ -291,14 +291,37 @@ class Work extends AdventureScene {
         let bg = this.add.image(0, 0, 'work_img').setOrigin(0, 0);
         bg.setScale(0.53);
 
-        let next_text = this.add.text(this.w / 3, this.h / 2, 'Get to work', {color: ('#FFFFFF')})
+        let work_text = this.add.text(this.w / 3, this.h / 2, 'Get to work', {color: ('#FFFFFF')})
             .setInteractive({useHandCursor: true})
             .setFontSize(25)
             .setBackgroundColor('0x000000')
             .on('pointerdown', () => {
-                next_text.alpha = 0;
+                work_text.alpha = 0;
             });
-        this.highlightOnHover(next_text);
+        this.highlightOnHover(work_text);
+
+        let ice = this.add.text(300, 400, 'hhhh', {color: ('#2EF8EA')});
+        ice.setBackgroundColor('#2EF8EA');
+
+        /*
+        let mocha = 
+        let matcha = 
+        let white_mocha = 
+        let cup = this.add.text(300, 400, 'hhhh', {color: ('#2EF8EA')})
+        */
+
+        let cup = this.add.text(600, 400, 'hhhhh', {color: ('#FFFFFF')});
+
+        this.dragInteractive(ice, cup);
+
+        let next_text = this.add.text(this.w / 3, this.h / 2, 'Head to campus', {color: ('#FFFFFF')})
+        .setInteractive({useHandCursor: true})
+        .setFontSize(25)
+        .setBackgroundColor('0x000000')
+        .on('pointerdown', () => {
+            
+        });
+    this.highlightOnHover(work_text);
     }
 }
 
@@ -310,7 +333,11 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Bedroom, Work, Real_Intro, Intro, Demo1, Demo2,],
+    scene: [Work, Real_Intro, Intro, Demo1, Demo2,],
     title: "Adventure Game",
+    physics: {
+        default: 'arcade',
+        arcade: { debug: false }
+    },
 });
 

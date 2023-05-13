@@ -152,43 +152,24 @@ class AdventureScene extends Phaser.Scene {
 
     // added code by Eduardo Torres Cruz
 
-    /*
-    // makes an draggable object(image)
-    makeDraggableObj(obj, imagePath) {
-        let obj = this.add.image(0, 0, imagePath);
-
-        obj.setInteractive({useHandCursor: true}).on('pointerdown')
-        
-        this.input.on('pointerdown', this.startDrag, this);
-
-        // start the dragging of target based on pointer
-        startDrag(pointer, targets){
-            this.input.off('pointerdown', this.startDrag, this);
-            this.dragObj = targets[0];
-            this.input.on('pointermove', this.doDrag, this);
-            this.input.on('pointerup', this.stopDrag, this);
-        }
-
-        // dragging movement
-        doDrag(pointer){
-            this.dragObj.x = pointer.x;
-            this.dragObj.y = pointer.y;
-    
-        }
-
-        // stop the dragging of target
-        stopDrag(){
-            this.input.on('pointerdown', this.startDrag,this);
-            this.input.off('pointermove', this.doDrag, this);
-            this.input.of('pointerup', this.stopDrag, this);
-        
-        }
-    }
-    */
+    // highlight an object on hover to 0xFFFDDD
     highlightOnHover(obj){
         obj.on('pointerover', () => 
             obj.setTintFill(0xFFFDDD))
         obj.on('pointerout', () => 
             obj.clearTint())
+    }
+
+    // makes object draggable and interact with a respective element
+    dragInteractive(drag_item, interactive_item){
+        drag_item.setInteractive({useHandCursor: true, draggable: true})
+        drag_item.on('drag', (pointer, dragX, dragY) => drag_item.setPosition(dragX, dragY))
+
+        drag_item.on('pointerup', () =>
+            {
+                if(drag_item.x <= interactive_item.x + 50 && drag_item.x >= interactive_item.x - 50 && drag_item.y <= interactive_item.y + 50 && drag_item.y >= interactive_item.y - 50){
+                    drag_item.destroy();
+                }
+            })
     }
 }
