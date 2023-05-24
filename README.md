@@ -11,8 +11,8 @@ Experience requirements:
 - **4+ locations in the game world**: Bedroom, Work(Starbucks), Metro_Station, Boardwalk, Bus, Classroom
 - **2+ interactive objects in most scenes**: apron, wallet, computer, *drink ingredients and cup*
 - **Many objects have `pointerover` messages**: All objects have a pointover message describing it via the message on the right along with the cursor changing and it being highlighted.
-- **Many objects have `pointerdown` effects**: All objects in the bedroom scene have the gainItem tween applied, drink ingredients in work scene are draggable on pointerdown
-- **Some objects are themselves animated**: All objects in the bedroom scene have the gainItem tween applied.
+- **Many objects have `pointerdown` effects**: All objects in the bedroom scene have the gainItem tween applied, drink ingredients in work scene are draggable on pointerdown.
+- **Some objects are themselves animated**: All objects in the bedroom scene have the gainItem tween applied, text in endings are animated to be seen as though typed.
 
 Asset sources:
 1. bedroom.png

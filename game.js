@@ -419,6 +419,9 @@ class Metro_Station extends AdventureScene {
                     this.showMessage("*shows student ID*");
                     this.gotoScene('bus');
                 }
+                else{
+                    this.gotoScene('bad_ending');
+                }
         });
         this.highlightOnHover(next_text);
     }
@@ -481,7 +484,46 @@ class Bus extends AdventureScene {
         let next_text = this.add.text(this.w / 3, this.h / 2, '*You ride the bus quietly all the way to your class', {color: ('#FFFFFF')})
             .setInteractive({useHandCursor: true})
             .setFontSize(25)
-            .setBackgroundColor('0x000000');
+            .setBackgroundColor('0x000000')
+            .on('pointerdown', () => {
+                this.gotoScene('classroom');
+            });
+    }
+}
+
+class Classroom extends AdventureScene {
+    constructor() {
+        super("classroom", "Classroom(2:30 p.m)");
+    }
+
+    preload(){
+        this.load.path = './assets/';
+        this.load.image('classroom_img', 'classroom.png')
+    }
+
+    onEnter() {
+        this.graphics = this.add.graphics();
+        
+        // Creates background of gameplay scene/interactive area
+        let bg = this.add.image(0, 0, 'classroom_img').setOrigin(0, 0);
+        bg.setScale(0.36);
+
+        this.showMessage("You make your way to your class and take a seat");
+
+        let computer_text = this.add.text(this.w / 3, this.h / 2, 'Pull out computer', {color: ('#FFFFFF')})
+            .setInteractive({useHandCursor: true})
+            .setFontSize(25)
+            .setBackgroundColor('0x000000')
+            .on('pointerover', () => this.showMessage("Let's take useful notes"))
+            .on('pointerdown', () => {
+                if (this.hasItem("computer")) {
+                    this.gotoScene('good_ending');
+                }
+                else{
+                    this.gotoScene('bad_ending');
+                }
+        });
+        this.highlightOnHover(computer_text);
     }
 }
 
@@ -497,10 +539,18 @@ class Bad_Ending extends Phaser.Scene {
         let red_rect = this.graphics.fillRect(0, 0, this.game.config.width, this.game.config.height);
 
         this.label = this.add.text(100, 100, '', {fontSize: 50, color: '#FFFFFF'}).setWordWrapWidth(1800);
-        this.typewriteText('You try to get on the bus, but are ashamed to find yourself without your Student ID or a mere $2. You return home and cry yourself to sleep; letting one simple shortcoming destroy your whole self esteem.');
+        this.typewriteText('You realize you are ill-equipped and cannot perform the task you planned to do. You return home and cry yourself to sleep; letting one simple shortcoming destroy your whole self esteem.');
    
-        let bad_ending_text = this.add.text(700, 600, 'Bad Ending', {fontSize: 100, color: '#FF0000'});
+        let bad_ending_text = this.add.text(650, 500, 'Bad Ending', {fontSize: 100, color: '#FF0000'});
         bad_ending_text.alpha = 0;
+
+        let retry_text = this.add.text(900, 620, 'Retry', {fontSize: 30, color: '#FFFFFF'})
+            .setInteractive({useHandCursor: true})
+            .setFontSize(25)
+            .on('pointerdown', () => {
+                this.scene.start('bedroom');
+        });
+        retry_text.alpha = 0;
 
         this.tweens.add({
             targets: bad_ending_text,
@@ -510,6 +560,81 @@ class Bad_Ending extends Phaser.Scene {
             ease: 'Linear',
             repeat: 0,
         });
+
+        this.time.delayedCall(20000, () => {
+            this.tweens.add({
+                targets: retry_text,
+                alpha: 1,
+                duration: 1000,
+                yoyo: true,
+                repeat: -1,
+            });
+        })
+    }
+
+    // code from "https://blog.ourcade.co/posts/2020/phaser-3-typewriter-text-effect-bitmap/"
+    typewriteText(text){
+	    const length = text.length
+	    let i = 0
+	    this.time.addEvent({
+		    callback: () => {
+			    this.label.text += text[i]
+			    ++i
+		    },
+		    repeat: length - 1,
+		    delay: 80
+	    })
+    }
+}
+
+class Good_Ending extends Phaser.Scene {
+    constructor() {
+        super("good_ending");
+    }
+
+    preload(){
+        this.load.path = './assets/';
+        this.load.image('koi_pond_img', 'koi_pond.png')
+    }
+
+    create() {
+        this.graphics = this.add.graphics();
+
+        let bg = this.add.image(0, 0, 'koi_pond_img').setOrigin(0, 0);
+        bg.setScale(0.48);
+
+        this.label = this.add.text(100, 100, '', {fontSize: 50, color: '#FFFFFF'}).setWordWrapWidth(1800);
+        this.typewriteText('You get through all your responsibilities for the day and head down to Porter. You sit by the koi pond and enjoy the calm peace and majestic koi next to you.');
+   
+        let good_ending_text = this.add.text(650, 500, 'Good Ending', {fontSize: 100, color: '#00FF00'});
+        good_ending_text.alpha = 0;
+
+        let play_again_text = this.add.text(900, 620, 'Play Again?', {fontSize: 30, color: '#FFFFFF'})
+            .setInteractive({useHandCursor: true})
+            .setFontSize(25)
+            .on('pointerdown', () => {
+                this.scene.start('bedroom');
+        });
+        play_again_text.alpha = 0;
+
+        this.tweens.add({
+            targets: good_ending_text,
+            delay: 14000,
+            alpha: 1,
+            duration: 1000,
+            ease: 'Linear',
+            repeat: 0,
+        });
+
+        this.time.delayedCall(16000, () => {
+            this.tweens.add({
+                targets: play_again_text,
+                alpha: 1,
+                duration: 1000,
+                yoyo: true,
+                repeat: -1,
+            });
+        })
     }
 
     // code from "https://blog.ourcade.co/posts/2020/phaser-3-typewriter-text-effect-bitmap/"
@@ -535,7 +660,7 @@ const game = new Phaser.Game({
         width: 1920,
         height: 1080
     },
-    scene: [Bad_Ending, Intro, Demo1, Demo2, Real_Intro, Bedroom, Work, Metro_Station, Boardwalk, Bus],
+    scene: [Intro, Demo1, Demo2, Real_Intro, Bedroom, Work, Metro_Station, Boardwalk, Bus, Classroom, Bad_Ending, Good_Ending],
     title: "Adventure Game",
     physics: {
         default: 'arcade',
