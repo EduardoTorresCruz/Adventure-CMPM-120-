@@ -161,17 +161,16 @@ class AdventureScene extends Phaser.Scene {
     }
 
     // makes object draggable and interact with a respective element
-    dragInteractive(drag_item, interactive_item, counter){
+    dragInteractive(drag_item, interactive_item){
         drag_item.setInteractive({useHandCursor: true, draggable: true})
         interactive_item.setInteractive({useHandCursor: true})
         drag_item.on('drag', (pointer, dragX, dragY) => drag_item.setPosition(dragX, dragY))
 
         drag_item.on('pointerup', () =>
             {
-                if(drag_item.x <= interactive_item.x + 50 && drag_item.x >= interactive_item.x - 50 && drag_item.y <= interactive_item.y + 50 && drag_item.y >= interactive_item.y - 50){
+                if(drag_item.x <= interactive_item.x + 50 && drag_item.x >= interactive_item.x - 50 && drag_item.y >= interactive_item.y - 50 && drag_item.y <= interactive_item.y + 50){
                     drag_item.destroy();
                     this.showMessage("Item used");
-                    counter += 1;
                 }
             })
     }
